@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <clipPath id="c"><circle cx="64" cy="64" r="60"/></clipPath>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="#fff" stroke="#111" stroke-width="4"/>
+  <g clip-path="url(#c)">
+    <rect x="0" y="0" width="128" height="42.7" fill="#111"/>
+    <rect x="0" y="42.7" width="128" height="42.7" fill="#fafafa"/>
+    <rect x="0" y="85.4" width="128" height="42.6" fill="#2e7d32"/>
+    <polygon points="0,0 64,64 0,128" fill="#d32f2f"/>
+    <g opacity=".25">
+      <rect x="0" y="0" width="128" height="128" fill="url(#k)"/>
+      <defs>
+        <pattern id="k" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <path d="M0 6 H12" stroke="#444" stroke-width="1"/>
+        </pattern>
+      </defs>
+    </g>
+  </g>
+  <text x="64" y="118" font-family="Arial, sans-serif" font-size="16" text-anchor="middle" fill="#111">LexiLearn</text>
+</svg>

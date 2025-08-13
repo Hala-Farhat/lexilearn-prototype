@@ -1,0 +1,121 @@
+/* LexiLearn Prototype — Brand: Palestine flag colors, kufiya pattern, olive (sumud) */
+:root{
+  --flag-red:#d32f2f;
+  --flag-green:#2e7d32;
+  --flag-black:#111;
+  --flag-white:#fafafa;
+  --ink:#222;
+  --muted:#667085;
+  --bg:#f6f7f9;
+  --card:#ffffff;
+  --primary:#2e7d32; /* green */
+  --radius:16px;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--ink);
+}
+
+header.brand{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 16px 24px;
+  background:
+    linear-gradient(90deg, var(--flag-black) 0 25%, var(--flag-white) 25% 50%, var(--flag-green) 50% 75%, var(--flag-red) 75% 100%);
+  border-bottom: 4px solid var(--flag-black);
+  position:sticky; top:0; z-index:10;
+}
+
+.brand-left{
+  display:flex; align-items:center; gap:14px;
+}
+.logo{width:56px; height:56px; border-radius:50%; background:#fff; padding:6px; box-shadow:var(--shadow)}
+.brand-titles h1{margin:0; color:#fff; letter-spacing:.5px}
+.brand-titles .subtitle{margin:0; color:#fff; opacity:.9; font-weight:600}
+
+.progress{min-width:260px; text-align:right}
+.progress-label{font-weight:700; color:#fff}
+.progress-bar{width:260px; height:10px; background:rgba(255,255,255,.5); border-radius:99px; overflow:hidden; margin-top:6px; margin-left:auto}
+.progress-bar span{display:block; height:100%; background: var(--flag-red)}
+
+.container{
+  display:grid;
+  grid-template-columns: 320px 1fr;
+  gap: 20px;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.sidebar .card{
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.sidebar .dots{display:grid; grid-template-columns: repeat(10, 1fr); gap:6px; margin: 8px 0}
+.sidebar .dots span{
+  width: 14px; height: 14px; display:block; border-radius:3px; background:#e7e7e7;
+}
+.sidebar .dots span.active{background: var(--flag-green)}
+
+.sidebar .stats{list-style:none; padding:0; margin:10px 0}
+.sidebar .stats li{color:var(--muted)}
+
+.sidebar-actions button{
+  width:100%; padding:10px 12px; margin-top:8px; border:1px solid #ddd; border-radius:12px; background:#fff; cursor:pointer;
+}
+
+.sidebar .motif{display:flex; align-items:center; gap:10px; background-image: url('/assets/kufiya.svg'); background-size: 160px; background-repeat: repeat;}
+
+.motif-text{font-size:12px; color:#333; background:#fff; padding:6px 8px; border-radius:8px;}
+
+.lesson .hero{
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 24px;
+  display:flex; align-items:center; gap:14px; justify-content:space-between;
+  background-image: url('/assets/kufiya.svg');
+  background-size:220px;
+}
+.hero h2{margin:0}
+.primary{
+  background: var(--primary);
+  color:#fff; padding:10px 16px; border:none; border-radius:12px; cursor:pointer; font-weight:700;
+}
+.primary.wide{width:100%; padding:14px 16px; font-size:1.05rem}
+.secondary{
+  background:#fff; color:#111; border:1px solid #ddd; padding:10px 14px; border-radius:12px; cursor:pointer;
+}
+
+.question, .recording, .feedback, .finish, .summary{
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-top: 16px;
+}
+
+.q-block{display:flex; align-items:flex-start; gap:16px}
+.q-label{color:var(--muted); margin:0}
+.q-text{font-size:1.1rem}
+
+.rec-controls{display:flex; gap:10px; flex-wrap:wrap}
+.preview{width:100%; margin-top:8px}
+
+.hidden{display:none}
+
+.footer{padding:20px; text-align:center; color:#666}
+
+@media (max-width: 920px){
+  .container{grid-template-columns: 1fr}
+  .progress{display:none}
+}
