@@ -1,104 +1,109 @@
-// LexiLearn Prototype Backend (Node.js/Express)
-const express = require('express');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LexiLearn — Daily Lesson Prototype</title>
+  <link rel="stylesheet" href="/assets/styles.css"/>
+</head>
+<body>
+<header class="brand">
+  <div class="brand-left">
+    <img src="/assets/logo.svg" class="logo" alt="LexiLearn Palestine Logo"/>
+    <div class="brand-titles">
+      <h1>LexiLearn</h1>
+      <p class="subtitle">60-Day Voice Challenge</p>
+    </div>
+  </div>
+  <div class="progress">
+    <div class="progress-label">Day <span id="day-num">1</span> of 60</div>
+    <div class="progress-bar"><span id="progress-fill" style="width:4%;"></span></div>
+  </div>
+</header>
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+<main class="container">
+  <aside class="sidebar">
+    <div class="card">
+      <h3>Challenge Progress</h3>
+      <div class="dots" id="day-dots"></div>
+      <ul class="stats">
+        <li>Days Completed: <strong id="days-completed">0</strong></li>
+        <li>Performance: <strong id="performance">—</strong></li>
+      </ul>
+    </div>
+    <div class="card motif">
+      <img src="/assets/olive.svg" alt="Olive branch"/>
+      <p class="motif-text">Colors of the flag • Kufiya net • Olive • Sumud</p>
+    </div>
+  </aside>
 
-const PUBLIC = path.join(__dirname, 'public');
-const UPLOADS = path.join(__dirname, 'uploads');
-app.use(express.static(PUBLIC));
+  <section class="lesson">
+    <div class="card hero-min">
+      <h3 id="topic">Today’s topic is: <span id="topic-name">—</span></h3>
+      <p class="q-label">Question <span id="q-index">1</span> / <span id="q-total">6</span></p>
+      <p id="q-text" class="hidden">—</p>
+    </div>
 
-// Storage
-if (!fs.existsSync(UPLOADS)) fs.mkdirSync(UPLOADS, { recursive: true });
-const storage = multer.diskStorage({
-  destination: function(req, file, cb){ cb(null, UPLOADS) },
-  filename: function(req, file, cb){ cb(null, Date.now() + '-' + file.originalname) }
-});
-const upload = multer({ storage });
+    <!-- حوار متزامن -->
+    <div class="card convo">
+      <div class="line system">
+        <span class="who">System</span>
+        <span id="tts-live" class="live"></span>
+      </div>
+      <div class="line user">
+        <span class="who">You</span>
+        <span id="stt-live" class="live">—</span>
+      </div>
+      <div class="line corr">
+        <span class="who">Correction</span>
+        <span id="corr-live" class="live"></span>
+      </div>
+    </div>
 
-// Simple in-memory lesson content for demo
-const LESSONS = {
-  1: {
-    topic: 'Daily Routines',
-    questions: [
-      'What do you usually do in the morning?',
-      'What time do you start studying or working?',
-      'How do you get to your university or workplace?',
-      'What do you eat for lunch?',
-      'What do you do in the evening to relax?',
-      'What time do you usually go to bed?'
-    ]
-  }
-};
+    <!-- مؤقّت لهب -->
+    <div class="card timer-wrap">
+      <div class="fire-timer">
+        <div id="fire" class="flame-bar"></div>
+        <div class="fire-glow"></div>
+        <div class="ticks"></div>
+        <div class="timer-num">⏱ <span id="timer">60</span>s</div>
+      </div>
+      <audio id="preview" controls class="preview" hidden></audio>
+    </div>
 
-function fakeSpeechToText(){ 
-  // Demo: we are not transcribing; we will return a placeholder
-  // In real app, call Whisper or similar here.
-  const samples = [
-    'I drink coffee and read news',
-    'I go to work at nine',
-    'I take the bus to university',
-    'I eat sandwich for lunch',
-    'I watch series and relax',
-    'I sleep at ten'
-  ];
-  return samples[Math.floor(Math.random()*samples.length)];
-}
+    <!-- فيدباك وملخّص -->
+    <div class="card feedback hidden" id="feedback">
+      <h4>Feedback</h4>
+      <p><strong>Transcript:</strong> <span id="transcript">—</span></p>
+      <p><strong>Correction:</strong> <span id="correction">—</span></p>
+      <p><strong>Note:</strong> <span id="note">—</span></p>
+    </div>
 
-function simpleGrammarCorrection(text){
-  // Extremely naive demo "corrections"
-  let t = text.trim();
-  // Capitalize first letter
-  if(t.length>0) t = t[0].toUpperCase() + t.slice(1);
-  // Add "a" before singular common nouns (very rough!)
-  t = t.replace(/\b(I (?:eat|have|drink)) (coffee|sandwich|tea)\b/gi, (m,a,b)=>`${a} a ${b}`);
-  // article for times
-  t = t.replace(/\b(go|start) work\b/gi, '$1 to work');
-  // Ensure present simple 'I' usage
-  t = t.replace(/\bI goes\b/gi, 'I go');
-  return {
-    correction: t,
-    note: "Basic correction applied (demo). Real app uses STT + grammar model."
-  };
-}
+    <div class="finish hidden" id="finish">
+      <button id="finish-day" class="primary wide">Finish Today’s Session</button>
+    </div>
 
-// API: get a question
-app.get('/api/day/:day/question/:idx', (req, res) => {
-  const day = parseInt(req.params.day, 10);
-  const idx = parseInt(req.params.idx, 10) - 1;
-  const lesson = LESSONS[day] || LESSONS[1];
-  const question = lesson.questions[idx] || lesson.questions[lesson.questions.length-1];
-  res.json({ topic: lesson.topic, question });
-});
+    <div id="summary" class="hidden summary card">
+      <h3>Day <span id="sum-day">1</span> — Summary</h3>
+      <div id="summary-list"></div>
+    </div>
+  </section>
+</main>
 
-// API: submit answer audio
-app.post('/api/day/:day/answer/:idx', upload.single('audio'), (req, res) => {
-  const transcript = fakeSpeechToText();
-  const { correction, note } = simpleGrammarCorrection(transcript);
-  res.json({ transcript, correction, note, saved: !!req.file, file: req.file ? req.file.filename : null });
-});
+<!-- زر البداية تحت -->
+<div class="toolbar">
+  <button id="start-day" class="primary">🔊 Start Day <span id="start-day-num">1</span></button>
+</div>
 
-// API: finish day -> summary + simple stats
-app.post('/api/day/:day/finish', (req, res) => {
-  const { answers } = req.body || { answers: [] };
-  const summary = (answers || []).map((a, i) => ({
-    question: a.q,
-    transcript: a.transcript,
-    correction: a.correction,
-    note: a.note
-  }));
-  res.json({
-    summary,
-    daysCompleted: 1,
-    performance: "Improving"
-  });
-});
+<footer class="footer">
+  <p>LexiLearn Prototype • Voice-first learning • Inspired by Palestine — flag colors • kufiya • olive • sumud</p>
+</footer>
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
-  console.log('LexiLearn prototype running on http://localhost:'+PORT);
-});
+<script src="/assets/app.js"></script>
+
+
+<!-- مكتبة jsPDF -->
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+</body>
+</html>
